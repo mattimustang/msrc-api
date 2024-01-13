@@ -52,6 +52,7 @@ import argparse
 import datetime
 import requests
 import re
+import sys
 
 # Constants
 BASE_URL = 'https://api.msrc.microsoft.com/cvrf/v2.0/'
@@ -184,13 +185,13 @@ def main():
         args.security_update = now.strftime("%Y-%b")
 
     if not check_data_format(args.security_update):
-        print("[!] Invalid date format please use 'yyyy-mmm'")
-        return
+        print("[!] Invalid date format please use 'yyyy-mmm'", file=sys.stderr)
+        sys.exit(2)
 
     release_json = fetch_vulnerabilities(args.security_update)
     if release_json is None:
-        print("[!] No vulnerability data fetched.")
-        return
+        print("[!] No vulnerability data fetched.",file=sys.stderr)
+        sys.exit(2)
 
     title, all_vulns = parse_vulnerabilities(release_json)
 
